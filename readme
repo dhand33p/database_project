@@ -1,0 +1,103 @@
+DATABASE SYSTEM:
+Ensure the dataset you want to upload is in the same directory(codebase) as main.py
+See the QUERIES section on how to run queries with EXAMPLES
+Download the codebase folder in the Google Drive folder and run the commands below.
+ALL OF THE TABLES ARE ALREADY LOADED IN! IF NEEDED, LOAD IN AGAIN TO TEST
+RUN THE DB:
+pip install -r requirements.txt
+Ensure you are in the “codebase” folder in the command line
+python main.py
+DS> enter query here..
+
+RESPECTIVE FUNCTION FILE EXPLANATION:
+handle_return_all_contain : This file handles the call when the user queries for all the data to be returned with all the columns, however, with a row limit.
+handle_from_return_all: This file handles the call when the user queries for all the data to be returned with all the columns.
+handle_group: This file handles the call when the user queries for the grouped by the column chosen and also handles the aggregated function.
+handle_delete_row: This file handles the call when the user queries for the grouped by the column chosen and also handles the aggregated function.
+handle_update_row: This file handles the call when the user queries for updating the row chosen by the user via the condition.
+handle_make_table_query: This file handles the call when the user queries for making new tables(csv files) on specific data types.
+handle_enter_query: This file handles the call when the user queries to add new data on specific data
+handle_condition_query: This file handles the call when the user queries with certain conditions on specific data rows or columns
+upload_data_and_process_in_chunks: This file handles the call when the user queries to upload their respective dataset.
+Hash_join_on_chunked_data with efficient_hash_join:  This file handles the call when the user queries to join two different tables using hash join on a specific column.
+handle_delete_table:  This file handles the call when the user queries to delete an existing table in the table_chunks folder
+Improved_manual_parse_query: This file only handles the conditional queries that need to be read in by the regex expression.
+List_tables: This file just lists the tables in the table_chunks folder
+Parse_user_query: This file handles all the queries that the user enters and directs them to the respective call based on the regex expression.
+table_chunks folder: This is the key folder that handles all the tables(CSV files) and chunks; the directory is the table's name (directory) where the chunks are stored.
+
+RUN THE DATABASE:
+python main.py
+DS> enter query here….
+QUERIES:
+
+TEST FOR DEMO AND ON DATASET:
+UPLOAD asteroid.csv
+FROM asteroid RETURN ["id"]
+FROM asteroid RETURN ALL CONTAIN 3
+JOIN asteroid AND ast_join LINKING "id" TO "id" AS join_ast
+FROM asteroid GROUP 'id' RETURN [max("H")]
+FROM asteroid GIVE 'H' < 4.0 CONTAIN 5
+FROM asteroid GIVE 'H' > 5.0 RETURN ["id"] CONTAIN 2
+SEE TABLES
+
+### Create New Table:
+MAKE test_table GIVE ID, Name, Age TYPE "INTEGER", "TEXT", "INTEGER"
+MAKE customer_info GIVE CustomerID, Name, Email TYPE "INTEGER", "TEXT", "TEXT"
+MAKE new_table GIVE ID, Value, Description TYPE "INTEGER", "FLOAT", "TEXT"
+
+### ENTER
+ENTER new_table VALUES [[0, 3.0, "Sample data 1"],[0, 3.0, "Sample data 2"],[10, 6.1, "Sample data 3"],[0, 3.0,"Sample data 1"],[0, 3.0,"Sample data 2"],[10, 6.1,"Sample data 3"],[0, 3.0, "Sample data 1"],[0, 3.0,"Sample data 2"],[10, 6.1, "Sample data 3"],[0, 3.0, "Sample data 1"],[0, 3.0, "Sample data 2"],[10, 6.1, "Sample data 3"],[0, 3.0, "Sample data 1"],[0, 3.0, "Sample data 2"],[10, 6.1,"Sample data 3"]]
+
+ENTER new_table VALUES [[1, 7.5, "New Data"]]
+ENTER test_table VALUES [[101, "John Doe", 30]]
+
+### Upload Data File:
+UPLOAD asteroid.csv
+
+### Return All Rows and Columns:
+FROM new_table RETURN ALL
+
+### Return All Rows with Specific Columns:
+FROM asteroid RETURN ["id"]
+FROM new_table RETURN ["ID", "Value"]
+
+### Return All Rows with a Row Limit:
+FROM asteroid RETURN ALL CONTAIN 3
+FROM new_table RETURN ALL CONTAIN 5
+
+
+### Return Specific Rows with Specific Columns and Row Limit:
+FROM asteroid RETURN ["H"] CONTAIN 3
+FROM new_table RETURN ["ID", "Value"] CONTAIN 3
+
+### Group and Aggregate Data:
+FROM asteroid GROUP 'id' RETURN [max("H")]
+FROM new_table GROUP "ID" RETURN ["ID"]
+FROM new_table GROUP "ID" RETURN [sum("Value")]   here mean, max, count,median,
+FROM new_table GROUP "ID" RETURN [sum("Value"), max("Value")]
+
+### Delete Rows Based on Condition:
+FROM new_table DELETE "Value" >= 5.0
+
+### Update Rows Based on Condition:
+UPDATE new_table GIVE "ID" == 0 CHANGE "Value" = 4.0
+
+### Join Tables:
+JOIN asteroid AND ast_join LINKING "id" TO "id" AS ast
+JOIN test_table AND customer_info LINKING "ID" TO "CustomerID" AS customer_details
+
+### Conditional Queries:
+FROM asteroid GIVE "id" == "a0000001"
+FROM asteroid GIVE 'H' < 4.0 CONTAIN 5
+FROM new_table GIVE "ID" == 0 RETURN ["ID"]
+FROM new_table GIVE "ID" == 0 SORT BY "Value"
+FROM new_table GIVE "ID" == 0 SORT BY "ID" CONTAIN 1
+FROM new_table GIVE 'Description' == 'Sample data 1' RETURN ['ID', 'Description']
+
+### SEE TABLES
+SEE TABLES
+
+### Delete Table:
+DELETE test_table
+DELETE customer_info
